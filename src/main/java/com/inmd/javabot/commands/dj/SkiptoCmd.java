@@ -1,0 +1,62 @@
+/*
+ * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.inmd.javabot.commands.dj;
+
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.inmd.javabot.Bot;
+import com.inmd.javabot.audio.AudioHandler;
+import com.inmd.javabot.commands.DJCommand;
+
+/**
+ *
+ * @author John Grosh <john.a.grosh@gmail.com>
+ */
+public class SkiptoCmd extends DJCommand 
+{
+    public SkiptoCmd(Bot bot)
+    {
+        super(bot);
+        this.name = "skipto";
+        this.help = "노래를 건너 뜀니다.";
+        this.arguments = "<position>";
+        this.aliases = bot.getConfig().getAliases(this.name);
+        this.bePlaying = true;
+    }
+
+    @Override
+    public void doCommand(CommandEvent event) 
+    {
+        int index = 0;
+        try
+        {
+            index = Integer.parseInt(event.getArgs());
+        }
+        catch(NumberFormatException e)
+        {
+            event.reply(event.getClient().getError()+" `"+event.getArgs()+"` 올바른 정수가 아님!");
+            return;
+        }
+        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+        if(index<1 || index>handler.getQueue().size())
+        {
+            event.reply(event.getClient().getError()+" 위치는 1 a 사이의 유효한 정수여야 함 "+handler.getQueue().size()+"!");
+            return;
+        }
+        handler.getQueue().skip(index-1);
+        event.reply(event.getClient().getSuccess()+"건너뛰었습니다.. **"+handler.getQueue().get(0).getTrack().getInfo().title+"**");
+        handler.getPlayer().stopTrack();
+    }
+}
