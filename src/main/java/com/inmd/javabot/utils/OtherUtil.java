@@ -170,7 +170,7 @@ public class OtherUtil
         if(javabot.class.getPackage()!=null && javabot.class.getPackage().getImplementationVersion()!=null)
             return javabot.class.getPackage().getImplementationVersion();
         else
-            return "0.1.2";
+            return "0.1.3";
     }
     
     public static String getLatestVersion()

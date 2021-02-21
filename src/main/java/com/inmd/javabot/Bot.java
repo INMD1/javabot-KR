@@ -19,6 +19,7 @@ package com.inmd.javabot;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.inmd.javabot.audio.AloneInVoiceHandler;
 import com.inmd.javabot.audio.AudioHandler;
 import com.inmd.javabot.audio.NowplayingHandler;
 import com.inmd.javabot.audio.PlayerManager;
@@ -43,6 +44,7 @@ public class Bot
     private final PlayerManager players;
     private final PlaylistLoader playlists;
     private final NowplayingHandler nowplaying;
+    private final AloneInVoiceHandler aloneInVoiceHandler;
     
     private boolean shuttingDown = false;
     private JDA jda;
@@ -59,7 +61,9 @@ public class Bot
         this.players.init();
         this.nowplaying = new NowplayingHandler(this);
         this.nowplaying.init();
-    }
+        this.aloneInVoiceHandler = new AloneInVoiceHandler(this);
+        this.aloneInVoiceHandler.init();
+        }
     
     public BotConfig getConfig()
     {
@@ -95,7 +99,12 @@ public class Bot
     {
         return nowplaying;
     }
-    
+
+    public AloneInVoiceHandler getAloneInVoiceHandler()
+    {
+        return aloneInVoiceHandler;
+    }
+
     public JDA getJDA()
     {
         return jda;
